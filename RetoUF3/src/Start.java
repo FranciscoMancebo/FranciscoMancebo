@@ -9,9 +9,10 @@ public class Start {
  
 		// Se definen las variables
 		String lineaFichero = "";
+		String[] elementosLinea;
 		String nota = "";
-		Float sumaNotas = 0.0f;
-		float divisor = 0.0f;
+		float sumaNotas = 0.0f;
+		int divisor = 0;
 		float resultado = 0.0f;
 		FileReader fr = null;
 		BufferedReader br = null;
@@ -19,8 +20,9 @@ public class Start {
 		try {
 			fr = new FileReader ("./notasPepe.txt");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Recoge la excepcion de que no encuentre el fichero, imprime el error y finaliza el programa.
+			System.err.println("El fichero no existe.");
+			return;
 		}
  
 		br = new BufferedReader (fr);
@@ -28,29 +30,27 @@ public class Start {
 		// Bucle de lectura linea por linea hasta que no haya mas lineas
 		try {
 			while ((lineaFichero = br.readLine())!=null) { 
-				// Toma el valor que hay despues del espacio en cada linea
-				// y se lo asigna a nota
-				nota = lineaFichero.substring(lineaFichero.indexOf(" "));
-				// Suma el valor de nota convertido a float en cada vuelta
+				/* Se utiliza el Split para dividir cada linea del fichero
+				 * en 2 string diferentes que se almacenan en el array elementosLinea.
+				 */
+				elementosLinea = lineaFichero.split(" ");
+				// Le asigno la segunda posicion (1) del array a nota, osea el String que hay detras del espacio.
+				nota = elementosLinea [1];
+				//Sumo la nota en cada vuelta.
 				sumaNotas = sumaNotas + Float.parseFloat(nota);
-				// Suma 1 por cada nota sumada a sumaNotas para luego hallar la media
-				divisor = divisor + 1.0f;	
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
+				divisor++;
+			}	
 			fr.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
 			br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (IOException e) {
+			/* Al ser las excepciones del mismo tipo (IOException) las he juntado en un mismo catch
+			 * que recoge las excepciones que puedan ocurrir en operaciones de input o output durante
+			 * el bucle o el cierre de fr y br. Imprime el error y la traza por consola y finaliza el programa.
+			 */
+			System.err.println("Ha ocurrido algun error de entrada o salida");
 			e.printStackTrace();
+			return;
 		}
 		// Realiza la operación e imprime el resultado.
 		resultado = sumaNotas / divisor;
